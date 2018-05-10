@@ -1,0 +1,150 @@
+package com.mutech.dubbo.telnet.helper.window;
+
+import com.mutech.dubbo.telnet.helper.pojo.ServiceData;
+import com.mutech.dubbo.telnet.helper.util.DubboTelnetUtil;
+import com.mutech.dubbo.telnet.helper.window.listener.ConnectButtonListener;
+import com.mutech.dubbo.telnet.helper.window.listener.ServiceTreeListener;
+import com.mutech.dubbo.telnet.helper.window.listener.TestButtonListener;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.JTextArea;
+
+public class WindowsApp {
+
+    private static String command;
+    private static JTextField ipTextField;
+    private static JTextField portTextField;
+    private static JTree serviceTree;
+    private static JTextArea inputTextArea;
+    private static JTextArea consoleTextArea;
+    public static DubboTelnetUtil dubboTelnetUtil = new DubboTelnetUtil();
+
+    /**
+     * Create the application.
+     */
+    public WindowsApp() {
+        initialize();
+    }
+
+    /**
+     * Initialize the contents of the frame.
+     */
+    private void initialize() {
+        JFrame frmDubbo = new JFrame();
+        frmDubbo.setTitle("dubbo服务测试工具");
+        frmDubbo.setBounds(100, 100, 900, 600);
+        frmDubbo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel topPanel = new JPanel();
+        frmDubbo.getContentPane().add(topPanel, BorderLayout.NORTH);
+        topPanel.setLayout(new GridLayout(1, 0, 0, 0));
+
+        JLabel ipLabel = new JLabel("ip");
+        ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        topPanel.add(ipLabel);
+
+        ipTextField = new JTextField();
+        topPanel.add(ipTextField);
+        ipTextField.setColumns(10);
+
+        JLabel protLabel = new JLabel("port");
+        protLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        topPanel.add(protLabel);
+
+        portTextField = new JTextField();
+        topPanel.add(portTextField);
+        portTextField.setColumns(10);
+
+        JButton connectButton = new JButton("连接");
+        connectButton.addActionListener(new ConnectButtonListener());
+        topPanel.add(connectButton);
+
+        JButton testButton = new JButton("测试");
+        testButton.addActionListener(new TestButtonListener());
+        topPanel.add(testButton);
+
+        JPanel centerPanel = new JPanel();
+        frmDubbo.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        centerPanel.setLayout(new GridLayout(3, 1, 0, 0));
+
+        serviceTree = new JTree();
+        serviceTree.setModel(null);
+        serviceTree.setForeground(Color.GRAY);
+        serviceTree.addTreeSelectionListener(new ServiceTreeListener());
+        centerPanel.add(serviceTree);
+
+        inputTextArea = new JTextArea();
+        inputTextArea.setBackground(Color.LIGHT_GRAY);
+        centerPanel.add(inputTextArea);
+
+        consoleTextArea = new JTextArea();
+        consoleTextArea.setEditable(false);
+        consoleTextArea.setBackground(Color.GRAY);
+        centerPanel.add(consoleTextArea);
+        frmDubbo.setVisible(true);
+    }
+
+    public static String getIp() {
+        return ipTextField.getText().trim();
+    }
+
+    public static int getPort() {
+        return Integer.parseInt(portTextField.getText().trim());
+    }
+
+    public static void setConsoleTextAreaText(String consoleTextAreaText) {
+        System.out.println(consoleTextAreaText);
+        WindowsApp.consoleTextArea.setText(consoleTextAreaText);
+    }
+
+    public static void addConsoleTextAreaText(String consoleTextAreaText) {
+        System.out.println(consoleTextAreaText);
+        WindowsApp.consoleTextArea.setText(WindowsApp.consoleTextArea.getText() + "\n" + consoleTextAreaText);
+    }
+
+    public static void setServiceTreeData(List<ServiceData> serviceDatas) {
+
+        DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode("服务名");
+        DefaultTreeModel defaultTreeModel = new DefaultTreeModel(defaultMutableTreeNode);
+        for (ServiceData serviceData : serviceDatas) {
+            DefaultMutableTreeNode serviceTreeNode = new DefaultMutableTreeNode(serviceData.getServiceName());
+            for (String functionName : serviceData.getFunctionNames()) {
+                DefaultMutableTreeNode functionTreeNode = new DefaultMutableTreeNode(functionName);
+                serviceTreeNode.add(functionTreeNode);
+            }
+            defaultMutableTreeNode.add(serviceTreeNode);
+        }
+        serviceTree.setModel(defaultTreeModel);
+    }
+
+    public static String getCommand() {
+        return command;
+    }
+
+    public static void setCommand(String command) {
+        WindowsApp.command = command;
+    }
+
+    public static String getInputTextAreaText() {
+        return inputTextArea.getText().trim();
+    }
+
+    public static void setInputTextArea(JTextArea inputTextArea) {
+        WindowsApp.inputTextArea = inputTextArea;
+    }
+
+}
