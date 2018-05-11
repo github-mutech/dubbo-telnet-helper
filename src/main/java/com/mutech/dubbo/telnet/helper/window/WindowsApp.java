@@ -132,7 +132,7 @@ public class WindowsApp {
 
     public static void setServiceTreeData(List<ServiceData> serviceDatas) {
 
-        DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode("服务名");
+        DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode("DUBBO服务");
         DefaultTreeModel defaultTreeModel = new DefaultTreeModel(defaultMutableTreeNode);
         for (ServiceData serviceData : serviceDatas) {
             DefaultMutableTreeNode serviceTreeNode = new DefaultMutableTreeNode(serviceData.getServiceName());

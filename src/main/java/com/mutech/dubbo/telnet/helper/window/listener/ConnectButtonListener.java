@@ -8,6 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * @author H
+ */
 public class ConnectButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
