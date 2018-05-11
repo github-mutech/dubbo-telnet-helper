@@ -83,13 +83,4 @@ public class DubboTelnetUtil {
         in.flush();
     }
 
-    public static void main(String[] args) {
-        DubboTelnetUtil dubboTelnetUtil;
-        try {
-            dubboTelnetUtil = new DubboTelnetUtil();
-            dubboTelnetUtil.initData("localhost",9032);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

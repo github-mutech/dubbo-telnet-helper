@@ -18,7 +18,7 @@ public class ConnectButtonListener implements ActionListener {
             WindowsApp.addConsoleTextAreaText("傻逼连不上,自检");
             exception.printStackTrace();
         }
-        if(null!=serviceDatas){
+        if (null != serviceDatas) {
             WindowsApp.addConsoleTextAreaText("dubbo服务连接成功。。。");
             WindowsApp.setServiceTreeData(serviceDatas);
         }

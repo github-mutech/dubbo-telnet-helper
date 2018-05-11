@@ -6,16 +6,13 @@ import com.mutech.dubbo.telnet.helper.window.listener.ConnectButtonListener;
 import com.mutech.dubbo.telnet.helper.window.listener.ServiceTreeListener;
 import com.mutech.dubbo.telnet.helper.window.listener.TestButtonListener;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
+import java.awt.*;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -23,7 +20,14 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 
+/**
+ * @author H
+ */
 public class WindowsApp {
+
+    private static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 20);
+    private static final Font TEXT_FIELD_FONT = new Font("微软雅黑", Font.PLAIN, 20);
+    private static final Font BUTTON_FONT = new Font("微软雅黑", Font.PLAIN, 20);
 
     private static String command;
     private static JTextField ipTextField;
@@ -45,35 +49,45 @@ public class WindowsApp {
      */
     private void initialize() {
         JFrame frmDubbo = new JFrame();
-        frmDubbo.setTitle("dubbo服务测试工具");
-        frmDubbo.setBounds(100, 100, 900, 600);
+        frmDubbo.setResizable(false);
+        frmDubbo.setType(Window.Type.UTILITY);
+        frmDubbo.setTitle("DUBBO服务测试工具");
+        frmDubbo.setBounds(100, 100, 900, 800);
         frmDubbo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel topPanel = new JPanel();
         frmDubbo.getContentPane().add(topPanel, BorderLayout.NORTH);
         topPanel.setLayout(new GridLayout(1, 0, 0, 0));
 
-        JLabel ipLabel = new JLabel("ip");
+        JLabel ipLabel = new JLabel("IP");
+        ipLabel.setFont(LABEL_FONT);
         ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
         topPanel.add(ipLabel);
 
         ipTextField = new JTextField();
+        ipTextField.setFont(TEXT_FIELD_FONT);
         topPanel.add(ipTextField);
         ipTextField.setColumns(10);
 
-        JLabel protLabel = new JLabel("port");
+        JLabel protLabel = new JLabel("PORT");
+        protLabel.setFont(LABEL_FONT);
         protLabel.setHorizontalAlignment(SwingConstants.CENTER);
         topPanel.add(protLabel);
 
         portTextField = new JTextField();
+        portTextField.setFont(TEXT_FIELD_FONT);
         topPanel.add(portTextField);
         portTextField.setColumns(10);
 
         JButton connectButton = new JButton("连接");
+        connectButton.setFont(BUTTON_FONT);
+        connectButton.setBackground(Color.GRAY);
         connectButton.addActionListener(new ConnectButtonListener());
         topPanel.add(connectButton);
 
         JButton testButton = new JButton("测试");
+        testButton.setFont(BUTTON_FONT);
+        testButton.setBackground(Color.GRAY);
         testButton.addActionListener(new TestButtonListener());
         topPanel.add(testButton);
 
