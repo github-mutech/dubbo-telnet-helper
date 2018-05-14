@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 public class ServiceData {
     private String serviceName;
-    private List<String> functionNames;
+    private List<FunctionData> functionDatas;
 }

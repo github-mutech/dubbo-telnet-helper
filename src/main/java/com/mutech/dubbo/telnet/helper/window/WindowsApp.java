@@ -1,10 +1,10 @@
 package com.mutech.dubbo.telnet.helper.window;
 
+import com.mutech.dubbo.telnet.helper.pojo.FunctionData;
 import com.mutech.dubbo.telnet.helper.pojo.ServiceData;
 import com.mutech.dubbo.telnet.helper.util.DubboTelnetUtil;
-import com.mutech.dubbo.telnet.helper.window.listener.ConnectButtonListener;
-import com.mutech.dubbo.telnet.helper.window.listener.ServiceTreeListener;
-import com.mutech.dubbo.telnet.helper.window.listener.TestButtonListener;
+import com.mutech.dubbo.telnet.helper.window.listener.*;
+import org.apache.commons.collections.CollectionUtils;
 
 
 import javax.swing.*;
@@ -18,17 +18,24 @@ import java.util.List;
  */
 public class WindowsApp {
 
+    private static List<ServiceData> serviceDatas;
+
     private static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 20);
     private static final Font TEXT_FIELD_FONT = new Font("微软雅黑", Font.PLAIN, 20);
     private static final Font BUTTON_FONT = new Font("微软雅黑", Font.PLAIN, 20);
+    private static final Font LARGE_LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 30);
     private static final Font TABBED_PANE_FONT = new Font("微软雅黑", Font.PLAIN, 12);
+
+    private static final Color BACKGROUND_COLOR = new Color(200, 221, 242);
 
     private static String command;
     private static JTextField ipTextField;
     private static JTextField portTextField;
     private static JTree serviceTree;
-    private static JTextArea inputTextArea;
+    private static JPanel inputPanel;
     private static JTextArea consoleTextArea;
+
+    private static JTabbedPane paramsTabbedPane;
     public static DubboTelnetUtil dubboTelnetUtil = new DubboTelnetUtil();
 
     /**
@@ -102,7 +109,7 @@ public class WindowsApp {
         centerPanel.add(servicesTabbedPane);
         serviceTree = new JTree();
         serviceTree.setModel(null);
-        serviceTree.setForeground(Color.GRAY);
+        serviceTree.setForeground(BACKGROUND_COLOR);
         serviceTree.addTreeSelectionListener(new ServiceTreeListener());
         servicesTabbedPane.addTab("服务", null, serviceTree, null);
 
@@ -110,9 +117,11 @@ public class WindowsApp {
         JTabbedPane inputTabbedPane = new JTabbedPane(JTabbedPane.TOP);
         inputTabbedPane.setFont(TABBED_PANE_FONT);
         centerPanel.add(inputTabbedPane);
-        inputTextArea = new JTextArea();
-        inputTextArea.setBackground(Color.LIGHT_GRAY);
-        inputTabbedPane.addTab("请求参数", null, inputTextArea, null);
+
+        inputPanel = new JPanel();
+        inputPanel.setBackground(BACKGROUND_COLOR);
+        inputTabbedPane.addTab("请求参数", null, inputPanel, null);
+        inputPanel.setLayout(new BorderLayout(0, 0));
 
         /* ********************  consoleTabbedPane ******************** */
         JTabbedPane consoleTabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -144,15 +153,15 @@ public class WindowsApp {
         WindowsApp.consoleTextArea.setText(WindowsApp.consoleTextArea.getText() + "\n" + consoleTextAreaText);
     }
 
-    public static void setServiceTreeData(List<ServiceData> serviceDatas) {
-
-
+    public static void setServiceTree(List<ServiceData> serviceDatas) {
+        serviceTree.removeAll();
         DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(getIp() + ":" + getPort());
         DefaultTreeModel defaultTreeModel = new DefaultTreeModel(defaultMutableTreeNode);
         for (ServiceData serviceData : serviceDatas) {
             DefaultMutableTreeNode serviceTreeNode = new DefaultMutableTreeNode(serviceData.getServiceName());
-            for (String functionName : serviceData.getFunctionNames()) {
-                DefaultMutableTreeNode functionTreeNode = new DefaultMutableTreeNode(functionName);
+            List<FunctionData> functionDatas = serviceData.getFunctionDatas();
+            for (FunctionData functionData : functionDatas) {
+                DefaultMutableTreeNode functionTreeNode = new DefaultMutableTreeNode(functionData.getFunctionName());
                 serviceTreeNode.add(functionTreeNode);
             }
             defaultMutableTreeNode.add(serviceTreeNode);
@@ -168,12 +177,58 @@ public class WindowsApp {
         WindowsApp.command = command;
     }
 
-    public static String getInputTextAreaText() {
-        return inputTextArea.getText().trim();
+    public static void setServiceDatas(List<ServiceData> serviceDataList) {
+        serviceDatas = serviceDataList;
     }
 
-    public static void setInputTextArea(JTextArea inputTextArea) {
-        WindowsApp.inputTextArea = inputTextArea;
+    public static List<ServiceData> getServiceDatas() {
+        return serviceDatas;
     }
 
+    public static void setInputPanel(String servieName, String functionName) {
+        inputPanel.removeAll();
+        List<String> functionParams = null;
+        for (ServiceData serviceData : serviceDatas) {
+            if (servieName.equals(serviceData.getServiceName())) {
+                for (FunctionData functionData : serviceData.getFunctionDatas()) {
+                    if (functionName.equals(functionData.getFunctionName())) {
+                        functionParams = functionData.getFunctionParams();
+                        break;
+                    }
+                }
+            }
+        }
+        // 得到参数列表，然后
+        if (CollectionUtils.isEmpty(functionParams)) {
+            JLabel noParamsLabel = new JLabel("此方法无参数");
+            noParamsLabel.setFont(LARGE_LABEL_FONT);
+            noParamsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            inputPanel.add(noParamsLabel, BorderLayout.CENTER);
+            return;
+        }
+        JPanel inputButtonsPanel = new JPanel();
+        FlowLayout inputButtonsPanelLayout = (FlowLayout) inputButtonsPanel.getLayout();
+        inputButtonsPanelLayout.setAlignment(FlowLayout.RIGHT);
+        inputPanel.add(inputButtonsPanel, BorderLayout.NORTH);
+
+        JButton formatButton = new JButton("格式化");
+        formatButton.addActionListener(new FormatButtonListener());
+        inputButtonsPanel.add(formatButton);
+
+        JButton cleanButton = new JButton("清空");
+        cleanButton.addActionListener(new CleanButtonListener());
+        inputButtonsPanel.add(cleanButton);
+
+        paramsTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
+        inputPanel.add(paramsTabbedPane, BorderLayout.CENTER);
+
+        for (String functionParam : functionParams) {
+            JTextArea paramTextArea = new JTextArea();
+            paramsTabbedPane.addTab(functionParam, null, paramTextArea, null);
+        }
+    }
+
+    public static JTabbedPane getParamsTabbedPane() {
+        return paramsTabbedPane;
+    }
 }

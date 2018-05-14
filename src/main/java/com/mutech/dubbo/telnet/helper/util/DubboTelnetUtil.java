@@ -1,5 +1,6 @@
 package com.mutech.dubbo.telnet.helper.util;
 
+import com.mutech.dubbo.telnet.helper.pojo.FunctionData;
 import com.mutech.dubbo.telnet.helper.pojo.ServiceData;
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -48,16 +49,25 @@ public class DubboTelnetUtil {
         for (int i = 0, size = serviceNameArray.length - 1; i < size; i++) {
             ServiceData serviceData = new ServiceData();
             serviceData.setServiceName(serviceNameArray[i]);
-            writeIn("ls " + serviceNameArray[i]);
+            writeIn("ls -l " + serviceNameArray[i]);
             String functions = readOut();
-            //
             System.out.println(functions);
             String[] functionArray = functions.split("\r\n");
-            List<String> functionNames = new ArrayList<>();
+            List<FunctionData> functionDatas = new ArrayList<>();
             for (int j = 0, functionArraySize = functionArray.length - 1; j < functionArraySize; j++) {
-                functionNames.add(functionArray[j]);
+                FunctionData functionData = new FunctionData();
+                String functionName = functionArray[j];
+                functionData.setFunctionName(functionName.substring(functionName.indexOf(' ') + 1, functionName.indexOf('(')));
+                String paramNames = functionName.substring(functionName.indexOf('(') + 1, functionName.indexOf(')'));
+                String[] paramNameArray = paramNames.split(",");
+                List<String> functionParams = new ArrayList<>();
+                for (int k = 0, paramNameArraySize = paramNameArray.length; k < paramNameArraySize; k++) {
+                    functionParams.add(paramNameArray[k]);
+                }
+                functionData.setFunctionParams(functionParams);
+                functionDatas.add(functionData);
             }
-            serviceData.setFunctionNames(functionNames);
+            serviceData.setFunctionDatas(functionDatas);
             serviceDatas.add(serviceData);
         }
         return serviceDatas;
