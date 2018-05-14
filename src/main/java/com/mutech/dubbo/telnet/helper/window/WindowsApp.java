@@ -53,7 +53,7 @@ public class WindowsApp {
         JFrame frmDubbo = new JFrame();
         frmDubbo.setResizable(false);
         String iconPath = System.getProperty("user.dir") + File.separatorChar + "src" + File.separatorChar + "main"
-                + File.separatorChar + "resources" + File.separatorChar + "iconImage.jpg";
+                + File.separatorChar + "resources" + File.separatorChar + "iconImage.ico";
         frmDubbo.setIconImage(Toolkit.getDefaultToolkit().getImage(iconPath));
         frmDubbo.setTitle("DUBBO服务测试工具");
         frmDubbo.setBounds(100, 100, 900, 800);
