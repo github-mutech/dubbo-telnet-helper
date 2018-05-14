@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 public class CleanButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        ((JTextArea) WindowsApp.getParamsTabbedPane().getComponent(WindowsApp.getParamsTabbedPane().getSelectedIndex()))
-                .setText(null);
+        ((JTextArea) ((JScrollPane) WindowsApp.getParamsTabbedPane().getComponent(WindowsApp.getParamsTabbedPane()
+                .getSelectedIndex())).getViewport().getView()).setText(null);
     }
 }

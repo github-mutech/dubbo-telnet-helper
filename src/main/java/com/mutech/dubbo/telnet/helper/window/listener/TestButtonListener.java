@@ -27,7 +27,10 @@ public class TestButtonListener implements ActionListener {
         String commandParam;
         Component[] components = WindowsApp.getParamsTabbedPane().getComponents();
         for (int i = 0, size = components.length; i < size; i++) {
-            commandParam = StringUtils.trimToNull(((JTextArea) components[i]).getText());
+
+
+            commandParam = StringUtils.trimToNull(((JTextArea) ((JScrollPane) WindowsApp.getParamsTabbedPane()
+                    .getComponents()[i]).getViewport().getView()).getText());
             if (commandParam == null) {
                 WindowsApp.addConsoleTextAreaText("傻逼，填参数！");
                 return;

@@ -133,7 +133,9 @@ public class WindowsApp {
         consoleTextArea = new JTextArea();
         consoleTextArea.setEditable(false);
         consoleTextArea.setBackground(Color.GRAY);
-        consoleTabbedPane.addTab("控制台", null, consoleTextArea, null);
+        JScrollPane consoleScrollPane = new JScrollPane();
+        consoleScrollPane.setViewportView(consoleTextArea);
+        consoleTabbedPane.addTab("控制台", null, consoleScrollPane, null);
 
         frmDubbo.setVisible(true);
     }
@@ -226,8 +228,11 @@ public class WindowsApp {
         inputPanel.add(paramsTabbedPane, BorderLayout.CENTER);
 
         for (String functionParam : functionParams) {
+
             JTextArea paramTextArea = new JTextArea();
-            paramsTabbedPane.addTab(functionParam, null, paramTextArea, null);
+            JScrollPane paramScrollPane = new JScrollPane();
+            paramScrollPane.setViewportView(paramTextArea);
+            paramsTabbedPane.addTab(functionParam, null, paramScrollPane, null);
         }
     }
 

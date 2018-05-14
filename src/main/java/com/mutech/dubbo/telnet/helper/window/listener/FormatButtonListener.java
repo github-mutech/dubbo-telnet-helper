@@ -15,8 +15,8 @@ import java.awt.event.ActionListener;
 public class FormatButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        JTextArea textArea = ((JTextArea) WindowsApp.getParamsTabbedPane().getComponent(WindowsApp.getParamsTabbedPane()
-                .getSelectedIndex()));
+        JTextArea textArea = (JTextArea) ((JScrollPane) WindowsApp.getParamsTabbedPane().getComponent(WindowsApp
+                .getParamsTabbedPane().getSelectedIndex())).getViewport().getView();
         String josn = StringUtils.trimToNull(textArea.getText());
         if (josn == null) {
             WindowsApp.addConsoleTextAreaText("格式化失败，参数不得为空");
@@ -29,6 +29,6 @@ public class FormatButtonListener implements ActionListener {
             WindowsApp.addConsoleTextAreaText("格式化失败，请检查数据格式");
             return;
         }
-        textArea.setText(JSON.toJSONString(jsonObject,true));
+        textArea.setText(JSON.toJSONString(jsonObject, true));
     }
 }
