@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -51,7 +52,9 @@ public class WindowsApp {
     private void initialize() {
         JFrame frmDubbo = new JFrame();
         frmDubbo.setResizable(false);
-        frmDubbo.setType(Window.Type.UTILITY);
+        String iconPath = System.getProperty("user.dir") + File.separatorChar + "src" + File.separatorChar + "main"
+                + File.separatorChar + "resources" + File.separatorChar + "iconImage.jpg";
+        frmDubbo.setIconImage(Toolkit.getDefaultToolkit().getImage(iconPath));
         frmDubbo.setTitle("DUBBO服务测试工具");
         frmDubbo.setBounds(100, 100, 900, 800);
         frmDubbo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
